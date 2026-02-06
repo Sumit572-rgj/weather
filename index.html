@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #weather-info {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather Information</h1>
+  <form id="location-form">
+    <label for="location">Enter a city name (and optionally, a country code, separated by a comma):</label><br>
+    <input type="text" id="location" name="location" required>
+    <button type="submit">Get Weather</button>
+  </form>
+
+  <div id="weather-info"></div>
+
+  <script>
+    const weatherInfoDiv = document.getElementById('weather-info');
+    const locationInput = document.getElementById('location');
+
+    document.getElementById('location-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const location = locationInput.value;
+
+      try {
+        const response = await fetch(`/weather?location=${encodeURIComponent(location)}`);
+        const weatherData = await response.json();
+
+        if (weatherData && !weatherData.error) {
+          weatherInfoDiv.innerHTML = `
+            <p><strong>City:</strong> ${weatherData.city}</p>
+            <p><strong>Temperature:</strong> ${weatherData.temperature}</p>
+            <p><strong>Weather:</strong> ${weatherData.description}</p>
+          `;
+        } else {
+          weatherInfoDiv.innerHTML = `<p>${weatherData.error || 'An error occurred.'}</p>`;
+        }
+      } catch (err) {
+        weatherInfoDiv.innerHTML = `<p>Failed to fetch weather data.</p>`;
+      }
+    });
+  </script>
+  <style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #74ebd5, #ACB6E5);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px #fff;
+}
+
+
+form {
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px;
+}
+
+label {
+  font-weight: bold;
+  color: #444;
+}
+
+input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #74ebd5;
+}
+
+button {
+  padding: 10px;
+  background: #74ebd5;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #4bb3a7;
+}
+
+#weather-info {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  width: 300px;
+  text-align: left;
+}
+
+#weather-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #333;
+}
+  </style>
+</body>
+</html>
